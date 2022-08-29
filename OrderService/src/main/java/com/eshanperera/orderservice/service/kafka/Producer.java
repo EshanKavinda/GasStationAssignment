@@ -18,7 +18,7 @@ public class Producer {
     ObjectMapper objectMapper = new ObjectMapper();
 
     public void publishToTopic(Event event) throws JsonProcessingException {
-        System.out.println("publishing to " + this.TOPIC + " from order service");
+        System.out.println("publishing event to " + this.TOPIC + " topic from order service");
 
         String eventStr = objectMapper.writeValueAsString(event);
         this.kafkaTemplate.send(this.TOPIC, eventStr);

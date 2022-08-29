@@ -19,8 +19,4 @@ public class MainStockController {
     public MainStock addUpdateStock(@RequestBody MainStock stock){
         return mainStockService.addOrUpdateStock(stock);
     }
-
-
-
-
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class Producer {
 
-    public static final String TOPIC = "new-order";
+    public static final String TOPIC = "new-order-response";
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -18,7 +18,7 @@ public class Producer {
     ObjectMapper objectMapper = new ObjectMapper();
 
     public void publishToTopic(Event event) throws JsonProcessingException {
-        System.out.println("Event is publishing to " + this.TOPIC);
+        System.out.println("publishing event to " + this.TOPIC + " topic from allocation service");
 
         String eventStr = objectMapper.writeValueAsString(event);
         this.kafkaTemplate.send(this.TOPIC, eventStr);
