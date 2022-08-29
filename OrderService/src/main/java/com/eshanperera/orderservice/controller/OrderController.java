@@ -16,6 +16,7 @@ public class OrderController {
 
     @RequestMapping(value = "/order", method = RequestMethod.POST)
     public Order newOrder(@RequestBody Order order){
+
         return orderService.saveNewOrder(order);
     }
 

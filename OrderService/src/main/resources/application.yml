@@ -7,3 +7,17 @@ spring:
       port: 27017
       host: localhost
       database: FuelApp
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      client-id: order-service
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: neworder-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      client-id: order-service
+      enable-auto-commit: false
