@@ -3,10 +3,7 @@ package com.eshanperera.orderservice.controller;
 import com.eshanperera.orderservice.models.Order;
 import com.eshanperera.orderservice.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class OrderController {
@@ -18,6 +15,11 @@ public class OrderController {
     public Order newOrder(@RequestBody Order order){
 
         return orderService.saveNewOrder(order);
+    }
+
+    @RequestMapping(value = "/order", method = RequestMethod.GET)
+    public Order getOrder(@RequestParam String oid){
+        return orderService.findOrder(oid);
     }
 
 }

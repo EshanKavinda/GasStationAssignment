@@ -54,4 +54,14 @@ public class OrderServiceImpl implements OrderService{
 
         return result;
     }
+
+    @Override
+    public Order updateOrder(Order order) {
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public Order findOrder(String oid) {
+        return orderRepository.findById(oid).get();
+    }
 }

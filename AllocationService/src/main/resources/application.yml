@@ -21,3 +21,4 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       client-id: allocation-service
       enable-auto-commit: false
+      auto-offset-reset: earliest

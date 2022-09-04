@@ -31,20 +31,22 @@ public class Consumer {
         System.out.println("Incomming message found. : " + message);
         Event event = objectMapper.readValue(message, Event.class);
 
-        String eventData = event.getData();
-        int fuelTypeId = Integer.parseInt(eventData.split("#")[0]);
-        double requestQty = Double.parseDouble(eventData.split("#")[1]);
-        double availableQty = mainStockService.getStockBalance(fuelTypeId);
-
-        String allocationResult = null;
-        String responseMsg = null;
+        String allocationResult;
+        String responseMsg;
+        String allocatedDate = null;
         String now = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now());
 
         if(event.getType().equals("NEW_ORDER")){
+            String eventData = event.getData();
+            int fuelTypeId = Integer.parseInt(eventData.split("#")[0]);
+            double requestQty = Double.parseDouble(eventData.split("#")[1]);
+            double availableQty = mainStockService.getStockBalance(fuelTypeId);
             if (availableQty >= requestQty){
                 Reservation r = reservationService.addReservation(new Reservation(event.getOrderId(), fuelTypeId, requestQty, now, 1));
                 if (r.getId() != null){
                     allocationResult = "success";
+                    responseMsg = "success";
+                    allocatedDate = r.getAllocatedDate();
                 } else{
                     allocationResult = "failed";
                     responseMsg = "Reservation Error";
@@ -53,11 +55,12 @@ public class Consumer {
                 allocationResult = "failed";
                 responseMsg = "No stock available.";
             }
-//            producer.publishToTopic(new Event(event.getOrderId(), "allocation-complete", ));
+            String resEventData = allocatedDate+"#"+responseMsg;
+            producer.publishToTopic(new Event(event.getOrderId(), "allocation-complete", resEventData, allocationResult, "allocation-service"));
         }else {
             System.out.println("Event is not related to allocation. process ignored");
         }
-        
+
 
 
     }
