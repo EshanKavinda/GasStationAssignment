@@ -1,0 +1,18 @@
+server:
+  port: 8087
+
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      client-id: dispatch-service
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: dispatch-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      client-id: dispatch-service
+      enable-auto-commit: false
+      auto-offset-reset: earliest
