@@ -19,6 +19,16 @@ public class MainStockServiceImpl implements MainStockService{
     }
 
     @Override
+    public MainStock findStock(int id) {
+        Optional<MainStock> stock = stockRepository.findById(id);
+        if (stock.isPresent()){
+            return stock.get();
+        }else {
+            return null;
+        }
+    }
+
+    @Override
     public double getStockBalance(int fuelTypeId) {
         Optional<MainStock> stock = stockRepository.findById(fuelTypeId);
         if (stock.isPresent()){

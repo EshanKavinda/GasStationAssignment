@@ -60,6 +60,27 @@ public class Consumer {
             }
             order.getWorkFlowStatus().getSchedule().setProcessdate(now);
             orderService.updateOrder(order);
+
+        } else if (event.getType().equals("to-dispatch-process")) {
+            Order order = orderService.findOrder(event.getOrderId());
+            if (order.getCurrentStatus().equals("SCHEDULLED")){
+                producer.publishToTopic(new Event(order.getOrderId(), "TO_DISPATCH", null, "pending", "order-service"));
+            }else {
+                System.out.println("Can't dispatch order because it is not scheduled yet....or already dispatched...");
+            }
+        } else if (event.getType().equals("dispatch-complete")) {
+            String eventData = event.getData();
+            String dispatchedDateTime = eventData.split("#")[0];
+            String responseMsg = eventData.split("#")[1];
+            Order order = orderService.findOrder(event.getOrderId());
+            if (event.getResult().equals("success")){
+                order.setCurrentStatus("DISPATCHED");
+                order.getWorkFlowStatus().getDispatch().setStatus("success");
+                order.getWorkFlowStatus().getDispatch().setDate(dispatchedDateTime);
+            }else {
+                order.getWorkFlowStatus().getDispatch().setStatus("failed: "+responseMsg);
+            }
+            orderService.updateOrder(order);
         }
 
     }

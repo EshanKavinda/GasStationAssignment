@@ -1,6 +1,7 @@
 package com.eshanperera.allocationservice.service.kafka;
 
 import com.eshanperera.allocationservice.models.Event;
+import com.eshanperera.allocationservice.models.MainStock;
 import com.eshanperera.allocationservice.models.Reservation;
 import com.eshanperera.allocationservice.service.FuelReservationService;
 import com.eshanperera.allocationservice.service.MainStockService;
@@ -31,18 +32,16 @@ public class Consumer {
         System.out.println("Incomming message found. : " + message);
         Event event = objectMapper.readValue(message, Event.class);
 
-        String allocationResult;
-        String responseMsg;
-        String allocatedDate = null;
         String now = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss").format(LocalDateTime.now());
 
         if(event.getType().equals("NEW_ORDER")){
+            String allocationResult, responseMsg, allocatedDate=null;
             String eventData = event.getData();
             int fuelTypeId = Integer.parseInt(eventData.split("#")[0]);
             double requestQty = Double.parseDouble(eventData.split("#")[1]);
             double availableQty = mainStockService.getStockBalance(fuelTypeId);
             if (availableQty >= requestQty){
-                Reservation r = reservationService.addReservation(new Reservation(event.getOrderId(), fuelTypeId, requestQty, now, 1));
+                Reservation r = reservationService.addOrUpdateReservation(new Reservation(event.getOrderId(), fuelTypeId, requestQty, now, 1));
                 if (r.getId() != null){
                     allocationResult = "success";
                     responseMsg = "success";
@@ -57,14 +56,34 @@ public class Consumer {
             }
             String resEventData = allocatedDate+"#"+responseMsg;
             producer.publishToTopic(new Event(event.getOrderId(), "allocation-complete", resEventData, allocationResult, "allocation-service"));
+
+        }else if (event.getType().equals("TO_DISPATCH")){
+            String dispatchResult, responseMsg, dispatchDate = null;
+            String oid = event.getOrderId();
+            Reservation reservation = reservationService.findReservation(oid);
+            int fuelType = reservation.getFuelType();
+            double reservedQuantity = reservation.getAmount(), updatedQty;
+
+            MainStock mainStock = mainStockService.findStock(fuelType);
+            double mainStockQty = mainStock.getAvailableQuantity();
+            if (mainStockQty >= reservedQuantity){
+                updatedQty = mainStockQty-reservedQuantity;
+                mainStock.setAvailableQuantity(updatedQty);
+                reservation.setStatus(0);
+                mainStockService.addOrUpdateStock(mainStock);
+                reservationService.addOrUpdateReservation(reservation);
+                dispatchResult = "success";
+                responseMsg = "success";
+                dispatchDate = now;
+            }else {
+                dispatchResult = "failed";
+                responseMsg = "stock mismatch";
+            }
+            String resEventData = dispatchDate+"#"+responseMsg;
+            producer.publishToTopic(new Event(event.getOrderId(), "dispatch-complete", resEventData, dispatchResult, "allocation-service"));
+
         }else {
-            System.out.println("Event is not related to allocation. process ignored");
+            System.out.println("Message not related to allocation based... Process ignored...");
         }
-
-
-
     }
-    
-
-
 }

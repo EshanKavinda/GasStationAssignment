@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -62,6 +63,11 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Order findOrder(String oid) {
-        return orderRepository.findById(oid).get();
+        Optional<Order> order = orderRepository.findById(oid);
+        if (order.isPresent()){
+            return order.get();
+        }else {
+            return null;
+        }
     }
 }
