@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="d-flex flex-row justify-content-center align-items-center" style="margin-top: 20px">
+    <form [formGroup]="orderDetail">
+      <div class="form-group">
+        <label for="type">Type</label>
+        <input type="text" class="form-control" id="type" formControlName="type" placeholder="Enter Type">
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <input type="text" class="form-control" id="quantity" formControlName="quantity" placeholder="Enter Quantity">
+      </div>
+      <div class="form-group">
+        <label for="stationName">Station Name</label>
+        <input type="text" class="form-control" id="stationName" formControlName="stationName" placeholder="Enter Name">
+      </div>
+      <div class="form-group">
+        <label for="contact">Contact Email/Phone</label>
+        <input type="text" class="form-control" id="contact" formControlName="contact" placeholder="Enter Contact">
+      </div>
+
+      <button type="submit" class="btn btn-primary" (click)="addOrder()">Submit</button>
+    </form>
+
+    <form [formGroup]="orderDetailSearch">
+      <div class="form-group">
+        <label for="orderSearch">Order Id</label>
+        <input type="text" class="form-control" id="orderSearch" formControlName="orderSearch" placeholder="Enter Your Order Id">
+      </div>
+      <button type="search" class="btn btn-success" (click)="searchOrder()">Search</button>
+    </form>
+
+  </div>
+
+</div>
