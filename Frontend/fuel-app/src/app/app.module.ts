@@ -6,15 +6,13 @@ import { DispatchComponent } from './dispatch/dispatch.component';
 import { OrderComponent } from './order/order.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
-import { SearchOrderComponent } from './search-order/search-order.component';
 import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
     AppComponent,
     DispatchComponent,
-    OrderComponent,
-    SearchOrderComponent
+    OrderComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +21,6 @@ import {HttpClientModule} from "@angular/common/http";
     HttpClientModule,
     RouterModule.forRoot([
       {path:'order', component: OrderComponent},
-      {path:'search', component: SearchOrderComponent},
       {path:'dispatch', component: DispatchComponent},
       { path: '', redirectTo: 'order', pathMatch: 'full' },
     ])

@@ -17,16 +17,19 @@ export class OrderComponent implements OnInit {
   constructor(private formBuilder : FormBuilder, private orderService: OrderService) { }
 
   ngOnInit(): void {
-    this.orderDetail = this.formBuilder.group({
-      type : [''],
-      quantity : [''],
-      stationName: [''],
-      contact: ['']
-    });
-
+    this.clearFeilds()
     this.orderDetailSearch = this.formBuilder.group({
       orderSearch : ['']
     })
+  }
+
+  clearFeilds(){
+    this.orderDetail = this.formBuilder.group({
+      type : [1],
+      quantity : [6000],
+      stationName: [''],
+      contact: ['']
+    });
   }
 
   addOrder(){
@@ -39,10 +42,12 @@ export class OrderComponent implements OnInit {
     this.orderService.createOrder(this.newOrderObject).subscribe(res=>{
       if (res.currentStatus === 'ORDER_CREATED'){
         alert('Your order succefully created. Order id is: '+res.orderId)
+        this.clearFeilds()
       }else {
         alert('Order creation failed')
       }
     },err=>{
+      alert('Server error...')
       console.log(err);
     });
   }
@@ -51,9 +56,23 @@ export class OrderComponent implements OnInit {
     let orderId = this.orderDetailSearch.value.orderSearch;
     this.orderService.searchOrder(orderId).subscribe(res=>{
       console.log(res);
-      alert('Order status is:'+ res.currentStatus);
+      if (res === null){
+        alert('Invalid order id')
+      }else {
+        let currentStatus = res.currentStatus;
+        if (currentStatus === 'SCHEDULLED'){
+          let alertString = 'Order status: '+currentStatus+'\nOrder will be arrived within '+res.workFlowStatus?.schedule?.arrival_date;
+          alert(alertString)
+        }else if (currentStatus === 'DISPATCHED'){
+          confirm('Order status: '+currentStatus+'\nIs the order received to your gas station?\nPress OK button if the order is received. Otherwise press CANCEL.' );
+        }else {
+          alert('Order status: '+currentStatus);
+        }
+
+      }
     }, error => {
       console.log(error);
+      alert('Server error')
     });
   }
 

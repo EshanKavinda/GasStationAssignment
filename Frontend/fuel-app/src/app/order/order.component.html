@@ -1,33 +1,65 @@
 <div class="container">
-  <div class="d-flex flex-row justify-content-center align-items-center" style="margin-top: 20px">
-    <form [formGroup]="orderDetail">
-      <div class="form-group">
-        <label for="type">Type</label>
-        <input type="text" class="form-control" id="type" formControlName="type" placeholder="Enter Type">
-      </div>
-      <div class="form-group">
-        <label for="quantity">Quantity</label>
-        <input type="text" class="form-control" id="quantity" formControlName="quantity" placeholder="Enter Quantity">
-      </div>
-      <div class="form-group">
-        <label for="stationName">Station Name</label>
-        <input type="text" class="form-control" id="stationName" formControlName="stationName" placeholder="Enter Name">
-      </div>
-      <div class="form-group">
-        <label for="contact">Contact Email/Phone</label>
-        <input type="text" class="form-control" id="contact" formControlName="contact" placeholder="Enter Contact">
-      </div>
 
-      <button type="submit" class="btn btn-primary" (click)="addOrder()">Submit</button>
-    </form>
+  <div class="row">
+    <div class="col-md-12">
+      <h5 style="margin: 30px" class="text-center">FUEL DISTRIBUTION SYSTEM</h5>
+    </div>
+  </div>
 
-    <form [formGroup]="orderDetailSearch">
-      <div class="form-group">
-        <label for="orderSearch">Order Id</label>
-        <input type="text" class="form-control" id="orderSearch" formControlName="orderSearch" placeholder="Enter Your Order Id">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-center">CREATE NEW ORDER</h5>
+          <form [formGroup]="orderDetail">
+            <div class="form-group">
+              <label for="type">Type</label>
+              <select class="form-control" id="type" formControlName="type">
+                <option value="1" [defaultSelected]="true">Petrol(92 Octane)</option>
+                <option value="2">Petrol(95 Octane EURO 4)</option>
+                <option value="3">Diesel(Auto Diesel)</option>
+                <option value="4">Diesel(Lanka Super Diesel 4 star)</option>
+                <option value="5">Lanka Industrial Kerosene</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <select class="form-control" id="quantity" formControlName="quantity">
+                <option value="6000" [defaultSelected]="true">6,000 L</option>
+                <option value="13200">13,200 L</option>
+                <option value="19800">19,800 L</option>
+                <option value="33000">33,000 L</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="stationName">Station Name</label>
+              <input type="text" class="form-control" id="stationName" formControlName="stationName" placeholder="Enter Name" required>
+            </div>
+            <div class="form-group">
+              <label for="contact">Contact Email/Phone</label>
+              <input type="text" class="form-control" id="contact" formControlName="contact" placeholder="Enter Contact" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" (click)="addOrder()">Submit</button>
+          </form>
+        </div>
       </div>
-      <button type="search" class="btn btn-success" (click)="searchOrder()">Search</button>
-    </form>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title text-center">CHECK YOUR ORDER STATUS</h5>
+          <form [formGroup]="orderDetailSearch">
+            <div class="form-group">
+              <label for="orderSearch">Order Id</label>
+              <input type="text" class="form-control" id="orderSearch" formControlName="orderSearch" placeholder="Enter Your Order Id">
+            </div>
+            <button type="submit" class="btn btn-success" (click)="searchOrder()">Search</button>
+          </form>
+        </div>
+      </div>
+    </div>
 
   </div>
 

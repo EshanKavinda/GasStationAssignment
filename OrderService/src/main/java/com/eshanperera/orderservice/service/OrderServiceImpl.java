@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,5 +71,17 @@ public class OrderServiceImpl implements OrderService{
         }else {
             return null;
         }
+    }
+
+    @Override
+    public List<Order> ordersToBeDispatched() {
+        List<Order> scheduledOrderList = new ArrayList<>();
+        List<Order> allOrders = orderRepository.findAll();
+        for (Order order: allOrders){
+            if (order.getCurrentStatus().equals("SCHEDULLED")){
+                scheduledOrderList.add(order);
+            }
+        }
+        return scheduledOrderList;
     }
 }
